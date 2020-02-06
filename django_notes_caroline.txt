@@ -1,0 +1,140 @@
+Things to do for Django Review Work:
+
+Django Intro:
+1. Go through previously covered Django videos and take some video notes when I have time
+2. Do "Time Display" activity
+3. Do "Random Word Generator" activity
+4. Do "Survey Form" activity
+5. Do "Session Words (Optional)" activity
+6. Do "Amadon" activity
+
+Creating a New Django Project:
+1. Create a virtual environment in VEfolder (optional) --> python -m virtualenv djangoEnv
+	--> call djangoEnv/Scripts/activate (to activate; I did not do this)
+	NOTE: every time you make a Django project, activate this VE
+2. Create a project: (note touch == nul>)
+	1. django-admin startproject [project_name]
+	2. cd [project_name]
+	3. mkdir apps
+	4. cd apps
+	5. touch __init__.py --> lets py interp know that app folder is present + other py modules can look in this directory + access files
+	6. manage.py --> auto-created --> used in calling specific operations
+	7. Starting a new app:
+		1. In apps folder: python ../manage.py startapp [name_of_app]
+		2. In settings.py: add apps.[name_of_app] into INSTALLED_APPS
+3. URLs Routing + Views:
+	1. In urls.py in main file, we can reroute URLS into our different apps to be handled (more broken down)
+		1. from django.conf.urls import url, include
+		2. from django.contrib import admin
+	2. url(r'^', include('apps.[app_name].urls')) in urlpatterns = [1st, 2nd, etc...]
+	3. touch urls.py in app directory
+	4. In app directory urls.py: url(r'^[additional_url_stuff]$', views.[method_name])
+		1. from django.conf.urls import url --> gives access to url()
+		2. from . import views --> explicitly improts views.py in current folder
+		3. url(r'^$', views.index (or other)) --> like @app.route
+			NOTE: r: tells python to interp following as raw string; $ ends the string
+		4. url() takes also name='[something]' --> later w/ NAMED ROUTES
+4. views.py == where requests/responses/stuff get processed
+--> Ex: from django.shortcuts import render, HttpResponse, redirect
+		def index(request):
+			response = "something"
+			return HttpResponse(response)
+NOTE: uses Regex in URL routing: regexr.com
+	Ex: 1. '^' Matches the following characters at the beginning of a string. Example: '^a' matches 'anna' but not 'banana'.
+		2. '$' Matches the previous characters at the end of a string. Example: 'a$' matches 'anna' and 'banana' but not 'fan'.
+		3. '[]' Matches any value in a range. Example: '[0-9]' matches '9' and '9s'.
+		4. '{n}' Matches n number or more repetitions of the preceding pattern. Example: '[0-9]{2}' matches '91' and '9834' but not '9'
+		5. \d Matches digits.  Example: "\d" matches "8" and "877x"
+		6. \d+ matches a string with one or more digits
+		7. \w Matches characters.
+		8 \w+ matches a string with one or more character/word
+	Ex: 1. url(r'^articles/(?P\d+)$', views.show)
+		2. url(r'^articles/(?P\w+)$', views.show_word)
+		3. url(r'^articles/2003/$', views.special_case_2003)
+		4. url(r'^articles/(?P[0-9]{4})$', views.year_archive)
+		5. url(r'^articles/(?P[0-9]{4})/(?P[0-9]{2}$', views.month_archive)
+
+Django:
+ORMs (Object Relational Mappers):
+1. Models are classes connected to the database
+	1. Instead of being SQL queries, they're objects linked together that lets Django create the SQL query themselves
+2. Purpose is to make simple join/link SQL queries faster and more concisely
+3. More complicated statements, directly write a query
+
+Models/Migrations:
+Models:
+- classes written in models.py
+	1. from django.db import models
+	2. class [Class Name] (models.Model):
+	3. Add the fields
+	4. All column (data) types can be found here: https://docs.djangoproject.com/en/2.2/
+- These act as the database types/objects (i.e. what's stored)
+- Map out the information that each should store
+- Also here is where you'll map out the different relations (one-to-one; many-to-one; one-to-many, etc...)
+NOTE: every time the database changes (i.e. new information is added, fields are changed, etc...), CREATE A MIGRATION
+- Creating a migration basically puts whatever changes we had to any data into the database (sqlite)
+1. Go to main directory in project
+2. Run python manage.py makemigrations --> staging; Django looks at our code, finds changes, and formulates the correct Python code to actually do the migration
+3. Run python manage.py migrate --> actually applies No. 2; where SQL queries are built and is equivalent to forward engineering an ERD (entity relationship diagram)
+
+NOTES:
+1. NEVER delete migration files!
+2. ALWAYS run migrations every time there is a COMPLETE change in models.py (i.e. won't immediately delete; you can always revert!)
+3. SQLite is fast and locally stored; good for development
+4. Django ORM models and queries will ALWAYS be the same no matter which database is being used.
+
+Foreign Key Relationships:
+- One-to-many relationships are done using the ForeignKey field
+	--> Ex: class Author(models.Model): ...
+	--> class Book(models.Model):
+			...
+			author = models.ForeignKey(Author, related_name="books")
+		--> One author can have many books
+		--> Info about a book's author can be accessed as: some_book.author
+		--> To create a record that this has a foreign key relationship, you pass it into the create function:
+			--> Ex: this_author = Author.objects.get(id=2)
+				my_book = Book.objects.create(title="Little Women", author=this_author)
+
+				#also in one line:
+				--> my_book = Book.objects.create(title="Little Women", author=Author.objects.get(id=2))
+- Joins are done automatically (i.e. you don't have to run any additional queries to get info about the author)
+- Searching off a ForeignKey relationship:
+	--> Ex: this_author = Author.objects.get(id=2)
+		books = Book.objects.filter(author=this_author)
+
+		#one-line version:
+		--> books = Book.objects.filter(author=Author.objects.get(id=2))
+- Searching by a field in related object w/ double underscore:
+	--> Ex: books = Books.objects.filter(author__name="Louise May Alcott")
+	--> Ex: books = Book.objects.filter(author__name__startswith="Lou")
+- Reverse Look-Ups:
+	- Done w/ related_name field
+	--> Ex: w/ related_name field, Django placed that field on the author to hold info about all of their books
+		--> def index(request):
+				context = {"authors": Author.objects.all()}
+				return render(request, "books/index.html", context)
+	- V. useful when calling data to be displayed on the template
+
+Many-to-Many Relationships:
+- To use m-m relationships in SQL, must create 3rd linked table w/ foreign key relationships to 2 other tables
+- Django: if model includes ManyToManyField, auto-construct
+--> Ex: class Book(models.Model): ...
+--> class Publisher(models.Model):
+		...
+		books = models.ManyToManyFidle(Book, related_name="publishers")
+	--> b/c each publisher can publish many books + every book can be published by many publishers
+	--> DOES NOT MATTER (unlike FKey) which model has the MTMF --> Book model could've had field publishers instead (publishers = models.MTMF(Publisher, related_name="books")) 
+- Adding a relationship btw 2 existing records:
+	--> Ex: this_book = Book.objects.get(id=4)
+		this_publisher = Publisher.objects.get(id=2)
+		this_publisher.books.add(this_book)
+- See all books from a publisher is SAME as a reverse look-up on FKey relationship --> this_publisher.books.all() in views.py or this_publisher_books.all in template
+NOTE: MTMF are automatically symmetrical: anything added to one side is automatically added to the other side
+
+Django Shell:
+1. python manage.py shell --> starts shell
+2. from apps.[APP_NAME].models import * --> imports all classes from that part: from apps.Blogs.models import *
+3. Play around and manipulate database w/ commands from ORM commands: http://learn.codingdojo.com/m/13/4554/34000
+NOTE: def __str__ or __repr__ to handle print results for more readable results:
+--> def __str__/__repr__(self):
+		return "... {}... {}".format(self.[param], self.[param2], etc...)
