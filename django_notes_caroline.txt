@@ -30,7 +30,7 @@ Creating a New Django Project:
 	3. touch urls.py in app directory
 	4. In app directory urls.py: url(r'^[additional_url_stuff]$', views.[method_name])
 		1. from django.conf.urls import url --> gives access to url()
-		2. from . import views --> explicitly improts views.py in current folder
+		2. from . import views --> explicitly imports views.py in current folder
 		3. url(r'^$', views.index (or other)) --> like @app.route
 			NOTE: r: tells python to interp following as raw string; $ ends the string
 		4. url() takes also name='[something]' --> later w/ NAMED ROUTES
