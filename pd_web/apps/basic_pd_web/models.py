@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+<<<<<<< HEAD
 class Article (models.Model):
     id_article=models.PositiveIntegerField()
     User_id_user=models.ManyToManyField(User.id_user, verbose_name="name of users")
@@ -128,3 +129,11 @@ class DateTime(models.Model):
     create_time=models.DateTimeField(auto_now_add=True)
     update_time=models.DateTimeField(auto_now=True)
     repeats=models.SmallIntegerField()
+=======
+
+#Justin
+#class Class_Name_Singular(models.Model):
+#	normal_field_item = models.FieldTyle(args)
+#	foreign_key_item_name_singular = models.ForeignKey(foreign_key_item_class_name, related_name = "classname_foreignkeyname")
+#	many_many_relations_name_plural = models.ManyToManyField(Other_Class_Name, related_name = "classnameplural_otherclassplural")
+>>>>>>> 75b338aaf2f8cba1b01f8946c62fcda78b609d78
