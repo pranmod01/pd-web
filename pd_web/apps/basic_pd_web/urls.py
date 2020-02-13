@@ -1,4 +1,4 @@
-django.conf.urls import url
+from django.conf.urls import url, include
 from . import views
 
 #this is where you add any new pages w/ new urls you want!

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.basic_pd_web'
+    'pd_web.apps.basic_pd_web'
 ]
 
 MIDDLEWARE = [
