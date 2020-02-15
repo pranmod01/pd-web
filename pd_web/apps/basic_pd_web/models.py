@@ -27,6 +27,12 @@ class User (models.Model):
     committee = models.ManyToManyField(Committee, related_name="users_committees")
     authentication_level = models.PositiveIntegerField(default = 0)
 
+class Authenticated(models.Model):
+    authenticator = models.ForeignKey(User, related_name="authenticator_authenticated", on_delete=models.PROTECT)
+    authenticated = models.BooleanField()
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
 class Article (models.Model):
     # id_article = models.PositiveIntegerField(default = 0)
     author = models.ForeignKey(User, related_name = "article_user", on_delete=models.PROTECT)
