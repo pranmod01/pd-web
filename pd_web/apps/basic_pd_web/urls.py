@@ -33,5 +33,26 @@ urlpatterns = [
 	# 	Contact Us
 
 	#02/14/20 - Caroline
-	url(r'')
+	url(r'^$', views.home),
+	url(r'^corporate_relations$', views.committees),
+	url(r'^alumni$', views.alumni),
+	url(r'^companies$', views.companies_home),
+	url(r'^companies_contact_us$', views.companies_contact_us),
+	url(r'^our_history$', views.companies_history),
+	url(r'^past_events$', views.past_events),
+	url(r'^about_us$', views.what_we_do),
+	url(r'^scholars$', views.scholars_home),
+	url(r'^professional_development_resources$', views.pd_resources),
+	url(r'^recent_resources$', views.new_resources),
+	url(r'^calendar$', views.pd_events_calendar),
+	url(r'^community_collabs$', views.collab_socials_events),
+	url(r'^scholar_feedback$', views.pd_feedback_ideas),
+	url(r'^forum$', views.forum),
+	url(r'^scholar_opportunities$', views.opportunities),
+	url(r'^recruitment$', views.recruitment),
+	url(r'^live_event_tools$', views.live_event_tools_dev),
+	url(r'^settings$', views.settings),
+	url(r'^sign_in$', views.sign_in),
+	url(r'^profile$', views.profile),
+	url(r'^contact_us$', views.contact_us),
 ]
