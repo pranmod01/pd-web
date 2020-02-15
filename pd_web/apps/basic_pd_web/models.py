@@ -26,6 +26,8 @@ class User (models.Model):
     # committee = models.CharField(max_length = 45)
     committee = models.ManyToManyField(Committee, related_name="users_committees")
     authentication_level = models.PositiveIntegerField(default = 0)
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
 
 class Authenticated(models.Model):
     authenticator = models.ForeignKey(User, related_name="authenticator_authenticated", on_delete=models.PROTECT)
@@ -39,6 +41,7 @@ class Article (models.Model):
     title = models.CharField(max_length = 45, primary_key = True)
     content = models.TextField() #CharField(max_length = 225)
     archive = models.SmallIntegerField() #justin: what is this for?
+    authetication = models.ForeignKey(Authenticated, related_name="article_authentication", on_delete=models.PROTECT, default=None)
     create_time = models.DateTimeField(auto_now_add = True)
     update_time = models.DateTimeField(auto_now = True)
 
@@ -63,10 +66,10 @@ class DateTime(models.Model):
     hour = models.PositiveIntegerField(default = 0)
     minute = models.PositiveIntegerField(default = 0)
     second = models.PositiveIntegerField(default = 0)
-    create_time = models.DateTimeField(auto_now_add = True)
-    update_time = models.DateTimeField(auto_now = True)
     # repeats = models.SmallIntegerField()
     repeats = models.ManyToManyField(Repeat, related_name="datetime_repeats")
+    create_time = models.DateTimeField(auto_now_add = True)
+    update_time = models.DateTimeField(auto_now = True)
 
 # class House (models.Model):
 #     id_house = models.PositiveIntegerField(primary_key = True)
@@ -101,9 +104,9 @@ class Tag (models.Model):
 class Industry (models.Model):
     # id_industry = models.PositiveIntegerField(primary_key = True)
     name = models.CharField(max_length = 45)
+    umbrella = models.CharField(max_length = 45)
     create_time = models.DateTimeField(auto_now_add = True)
     update_time = models.DateTimeField(auto_now = True)
-    umbrella = models.CharField(max_length = 45)
 
 class Major (models.Model):
     # id_major = models.PositiveIntegerField(primary_key = True)
@@ -118,26 +121,13 @@ class CompanyStatus(models.Model):
     pending = models.BooleanField() #SmallIntegerField()
     contacted = models.BooleanField() #SmallIntegerField()
     future = models.BooleanField() #SmallIntegerField()
+    notes = models.TextField() #CharField(max_length = 255)
     create_time = models.DateTimeField(auto_now_add = True)
     update_time = models.DateTimeField(auto_now = True)
-    notes = models.TextField() #CharField(max_length = 255)
 
 class Company(models.Model):
     # id_company = models.PositiveIntegerField(primary_key = True)
     company_name = models.CharField(max_length = 45)
+    company_status = models.ForeignKey(CompanyStatus, related_name="company_status", on_delete=models.PROTECT) #CompanyStatus.id_company_status(primary_key = True)
     create_time = models.DateTimeField(auto_now_add = True)
     update_time = models.DateTimeField(auto_now = True)
-    company_status = models.ForeignKey(CompanyStatus, related_name="company_status", on_delete=models.PROTECT) #CompanyStatus.id_company_status(primary_key = True)
-
-# class DateTime(models.Model):
-#     # id_date_time = models.PostiiveIntegerField(primary_key)
-#     day = models.PositiveIntegerField(default = 0)
-#     month = models.PositiveIntegerField(default = 0)
-#     month_word = models.CharField(max_length = 45)
-#     year = models.PositiveIntegerField(default = 0)
-#     hour = models.PositiveIntegerField(default = 0)
-#     minute = models.PositiveIntegerField(default = 0)
-#     second = models.PositiveIntegerField(default = 0)
-#     create_time = models.DateTimeField(auto_now_add = True)
-#     update_time = models.DateTimeField(auto_now = True)
-#     repeats = models.SmallIntegerField()
