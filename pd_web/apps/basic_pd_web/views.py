@@ -1,9 +1,9 @@
+#for displaying utf-8 chars
+from __future__ import unicode_literals
 #used for sending data to templates
 from django.shortcuts import render, redirect
 #allows us to use the models we created in models.py
 from .models import * 
-#for displaying utf-8 chars
-from __future__ import uicode_literals
 
 # Create your views here.
 

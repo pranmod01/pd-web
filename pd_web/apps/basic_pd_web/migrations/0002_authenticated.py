@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('basic_pd_web', '001_initial_set_up_justin_edited_caroline'),
+        ('basic_pd_web', '0001_initial_set_up_justin_edited_caroline'),
     ]
 
     operations = [
